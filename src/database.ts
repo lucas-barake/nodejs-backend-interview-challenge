@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 
 export let db: Kysely<DB>;
 
-export async function loadDatabase() {
+export async function loadDatabase(): Promise<void> {
   dotenv.config();
 
   const dialect = new PostgresDialect({
