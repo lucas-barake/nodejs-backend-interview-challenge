@@ -1,13 +1,11 @@
 import { Pool } from "pg";
 import { Kysely, PostgresDialect } from "kysely";
 import { type DB } from "kysely-codegen";
-import dotenv from "dotenv";
+import { Logger } from "@nestjs/common";
 
 export let db: Kysely<DB>;
 
 export async function loadDatabase(): Promise<void> {
-  dotenv.config();
-
   const dialect = new PostgresDialect({
     pool: new Pool({
       connectionString: process.env.DATABASE_URL,
@@ -16,5 +14,8 @@ export async function loadDatabase(): Promise<void> {
 
   db = new Kysely<DB>({
     dialect,
+    log(event) {
+      Logger.debug(`${event.query.sql} (${event.queryDurationMillis}ms)`, "Kysely");
+    },
   });
 }
