@@ -4,6 +4,8 @@ import { AuthorsModule } from "./authors/authors.module";
 import { BooksModule } from "./books/books.module";
 import { ConfigModule } from "@nestjs/config";
 import { LoggerMiddleware } from "@/middlewares/logger.middleware";
+import { APP_PIPE } from "@nestjs/core";
+import { ZodValidationPipe } from "nestjs-zod";
 
 @Module({
   imports: [
@@ -12,7 +14,12 @@ import { LoggerMiddleware } from "@/middlewares/logger.middleware";
     ConfigModule.forRoot({ isGlobal: true, envFilePath: ".env" }),
   ],
   controllers: [AppController],
-  providers: [],
+  providers: [
+    {
+      provide: APP_PIPE,
+      useClass: ZodValidationPipe,
+    },
+  ],
 })
 export class AppModule {
   public configure(consumer: MiddlewareConsumer): void {
