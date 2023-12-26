@@ -21,7 +21,11 @@ $ yarn install
 $ yarn run start:dev
 ```
 
-## Instructions
+## Docs
+
+You can find the Swagger docs in the following url: http://localhost:3000/api
+
+## Instruction
 
 - GET /books: to list all the books in the database, with optional query parameters for filtering, sorting, and pagination.
 - GET /books/:id: to get a specific book by its id, with the author’s name and bio included in the response.
