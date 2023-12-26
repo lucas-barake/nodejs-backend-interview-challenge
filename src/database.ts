@@ -14,8 +14,18 @@ export async function loadDatabase(): Promise<void> {
 
   db = new Kysely<DB>({
     dialect,
-    log(event) {
-      Logger.debug(`${event.query.sql} (${event.queryDurationMillis}ms)`, "Kysely");
-    },
+    log:
+      process.env.NODE_ENV === "development"
+        ? (event) => {
+            const formattedSql = event.query.sql.replace(/\$(\d+)/g, (_, index) => {
+              const param = event.query.parameters[Number(index) - 1];
+              return param !== null && param !== undefined && typeof param.toString === "function"
+                ? param.toString()
+                : "UNKNOWN_PARAM";
+            });
+
+            Logger.debug(`\n${formattedSql} \n(${event.queryDurationMillis}ms)`, "Kysely");
+          }
+        : undefined,
   });
 }
